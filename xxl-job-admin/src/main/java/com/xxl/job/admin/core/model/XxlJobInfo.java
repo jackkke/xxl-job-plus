@@ -1,5 +1,8 @@
 package com.xxl.job.admin.core.model;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import java.util.Date;
 
 /**
@@ -7,14 +10,20 @@ import java.util.Date;
  *
  * @author xuxueli  2016-1-12 18:25:49
  */
+@TableName("xxl_job_info")
 public class XxlJobInfo {
-	
+
+	@TableId(value = "id")
 	private int id;				// 主键ID
-	
+
+	@TableField("job_group")
 	private int jobGroup;		// 执行器主键ID
+	@TableField("job_desc")
 	private String jobDesc;
-	
+
+	@TableField("add_time")
 	private Date addTime;
+	@TableField("add_time")
 	private Date updateTime;
 	
 	private String author;		// 负责人
