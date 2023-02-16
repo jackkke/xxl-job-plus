@@ -100,3 +100,13 @@ spring:
     url: jdbc:dm://127.0.0.1:5236
     username: SYSDBA
     password: SYSDBA
+---
+spring:
+  config:
+    activate:
+      on-profile: sqlserver
+  datasource:
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://127.0.0.1:1433;DatabaseName=xxl_job
+    username: root
+    password: root_pwd

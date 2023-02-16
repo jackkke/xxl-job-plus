@@ -82,6 +82,10 @@
 			<artifactId>DmJdbcDriver18</artifactId>
 			<version>8.1.2.192</version>
 		</dependency>
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
