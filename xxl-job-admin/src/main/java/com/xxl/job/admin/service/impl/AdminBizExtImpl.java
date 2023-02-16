@@ -1,5 +1,6 @@
 package com.xxl.job.admin.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xxl.job.admin.core.cron.CronExpression;
 import com.xxl.job.admin.core.model.XxlJobEditInfo;
 import com.xxl.job.admin.core.model.XxlJobGroup;
@@ -44,8 +45,8 @@ public class AdminBizExtImpl implements AdminBizExt {
       assert xxlJobEditInfo.getExecutorHandler() != null;
       assert xxlJobEditInfo.getScheduleConf() != null;
 
-      List<XxlJobGroup> xxlJobGroups = xxlJobGroupDao.pageList(0, 10, xxlJobEditInfo.getAppname(), null);
-      for (XxlJobGroup xxlJobGroup : xxlJobGroups) {
+      Page<XxlJobGroup> xxlJobGroupPage = xxlJobGroupDao.pageList(0, 10, xxlJobEditInfo.getAppname(), null);
+      for (XxlJobGroup xxlJobGroup : xxlJobGroupPage.getRecords()) {
         List<XxlJobInfo> xxlJobInfos = xxlJobInfoDao.getJobsByGroup(xxlJobGroup.getId());
         if (CollectionUtils.isEmpty(xxlJobInfos)) {
           Optional<XxlJobInfo> xxlJobInfoOptional = xxlJobInfos.stream()
