@@ -1,5 +1,8 @@
 package com.xxl.job.admin.core.model;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -8,15 +11,23 @@ import java.util.List;
 /**
  * Created by xuxueli on 16/9/30.
  */
+@TableName("xxl_job_group")
 public class XxlJobGroup {
 
-    private int id;
+    @TableId(value = "id")
+    private Integer id;
+    @TableField("app_name")
     private String appname;
+    @TableField("title")
     private String title;
+    @TableField("address_type")
     private int addressType;        // 执行器地址类型：0=自动注册、1=手动录入
+    @TableField("address_list")
     private String addressList;     // 执行器地址列表，多地址逗号分隔(手动录入)
+    @TableField("update_time")
     private Date updateTime;
 
+    @TableField(exist=false)
     // registry list
     private List<String> registryList;  // 执行器地址列表(系统注册)
     public List<String> getRegistryList() {
@@ -26,11 +37,11 @@ public class XxlJobGroup {
         return registryList;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

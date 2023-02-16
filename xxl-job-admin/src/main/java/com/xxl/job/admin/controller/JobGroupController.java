@@ -1,5 +1,6 @@
 package com.xxl.job.admin.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.admin.core.util.I18nUtil;
@@ -8,15 +9,19 @@ import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.dao.XxlJobRegistryDao;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
 
 /**
  * job group controller
@@ -46,14 +51,13 @@ public class JobGroupController {
 										String appname, String title) {
 
 		// page query
-		List<XxlJobGroup> list = xxlJobGroupDao.pageList(start, length, appname, title);
-		int list_count = xxlJobGroupDao.pageListCount(start, length, appname, title);
+		Page<XxlJobGroup> page = xxlJobGroupDao.pageList(start, length, appname, title);
 
 		// package result
 		Map<String, Object> maps = new HashMap<String, Object>();
-		maps.put("recordsTotal", list_count);		// 总记录数
-		maps.put("recordsFiltered", list_count);	// 过滤后的总记录数
-		maps.put("data", list);  					// 分页列表
+		maps.put("recordsTotal", page.getTotal());		// 总记录数
+		maps.put("recordsFiltered", page.getTotal());	// 过滤后的总记录数
+		maps.put("data", page.getRecords());  					// 分页列表
 		return maps;
 	}
 
@@ -96,8 +100,8 @@ public class JobGroupController {
 		// process
 		xxlJobGroup.setUpdateTime(new Date());
 
-		int ret = xxlJobGroupDao.save(xxlJobGroup);
-		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
+		boolean ret = xxlJobGroupDao.save(xxlJobGroup);
+		return ret?ReturnT.SUCCESS:ReturnT.FAIL;
 	}
 
 	@RequestMapping("/update")
