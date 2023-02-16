@@ -1,37 +1,28 @@
 package com.xxl.job.admin.dao;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.xxl.job.admin.core.model.XxlJobGroup;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * Created by xuxueli on 16/9/30.
  */
-@Mapper
-public interface XxlJobGroupDao {
+public interface XxlJobGroupDao extends IService<XxlJobGroup> {
 
-    public List<XxlJobGroup> findAll();
+    List<XxlJobGroup> findAll();
 
-    public List<XxlJobGroup> findByAddressType(@Param("addressType") int addressType);
+    List<XxlJobGroup> findByAddressType(@Param("addressType") int addressType);
 
-    public int save(XxlJobGroup xxlJobGroup);
+    int update(XxlJobGroup xxlJobGroup);
 
-    public int update(XxlJobGroup xxlJobGroup);
+    int remove(@Param("id") int id);
 
-    public int remove(@Param("id") int id);
+    XxlJobGroup load(@Param("id") int id);
 
-    public XxlJobGroup load(@Param("id") int id);
-
-    public List<XxlJobGroup> pageList(@Param("offset") int offset,
+    Page<XxlJobGroup> pageList(@Param("offset") int offset,
                                       @Param("pagesize") int pagesize,
                                       @Param("appname") String appname,
                                       @Param("title") String title);
-
-    public int pageListCount(@Param("offset") int offset,
-                             @Param("pagesize") int pagesize,
-                             @Param("appname") String appname,
-                             @Param("title") String title);
-
 }

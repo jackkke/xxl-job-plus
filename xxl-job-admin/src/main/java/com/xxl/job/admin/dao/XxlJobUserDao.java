@@ -1,14 +1,12 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobUser;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author xuxueli 2019-05-04 16:44:59
  */
-@Mapper
 public interface XxlJobUserDao {
 
 	public List<XxlJobUser> pageList(@Param("offset") int offset,

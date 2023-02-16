@@ -27,7 +27,7 @@ public class XxlJobGroupDaoTest {
         group.setAddressList("setAddressList");
         group.setUpdateTime(new Date());
 
-        int ret = xxlJobGroupDao.save(group);
+        boolean ret = xxlJobGroupDao.save(group);
 
         XxlJobGroup group2 = xxlJobGroupDao.load(group.getId());
         group2.setAppname("setAppName2");
