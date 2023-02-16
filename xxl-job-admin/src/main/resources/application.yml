@@ -90,3 +90,13 @@ spring:
     url: jdbc:postgresql://127.0.0.1:5432/postgres
     username: postgres
     password: example
+---
+spring:
+  config:
+    activate:
+      on-profile: dm
+  datasource:
+    driver-class-name: dm.jdbc.driver.DmDriver
+    url: jdbc:dm://127.0.0.1:5236
+    username: SYSDBA
+    password: SYSDBA
