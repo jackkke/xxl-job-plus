@@ -2,6 +2,7 @@ package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
+import com.xxl.job.admin.core.model.XxlJobCreatetInfo;
 import com.xxl.job.admin.core.model.XxlJobEditInfo;
 import com.xxl.job.admin.service.AdminBizExt;
 import com.xxl.job.core.biz.AdminBiz;
@@ -69,6 +70,9 @@ public class JobApiController {
         } else if ("editJob".equals(uri)) {
             XxlJobEditInfo xxlJobEditInfo = GsonTool.fromJson(data, XxlJobEditInfo.class);
             return adminBizExt.editJob(xxlJobEditInfo);
+        } else if ("createJob".equals(uri)) {
+            XxlJobCreatetInfo xxlJobCreatetInfo = GsonTool.fromJson(data, XxlJobCreatetInfo.class);
+            return adminBizExt.createJob(xxlJobCreatetInfo);
         } else {
             return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, uri-mapping("+ uri +") not found.");
         }

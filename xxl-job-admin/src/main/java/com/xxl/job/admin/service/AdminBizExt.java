@@ -1,5 +1,6 @@
 package com.xxl.job.admin.service;
 
+import com.xxl.job.admin.core.model.XxlJobCreatetInfo;
 import com.xxl.job.admin.core.model.XxlJobEditInfo;
 import com.xxl.job.core.biz.model.ReturnT;
 
@@ -11,4 +12,6 @@ import com.xxl.job.core.biz.model.ReturnT;
 public interface AdminBizExt {
 
   ReturnT<String> editJob(XxlJobEditInfo xxlJobEditInfo);
+
+  ReturnT<String> createJob(XxlJobCreatetInfo xxlJobCreatetInfo);
 }

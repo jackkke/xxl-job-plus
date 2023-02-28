@@ -1,6 +1,7 @@
 package com.xxl.job.admin.service.impl;
 
 import com.xxl.job.admin.core.cron.CronExpression;
+import com.xxl.job.admin.core.model.XxlJobCreatetInfo;
 import com.xxl.job.admin.core.model.XxlJobEditInfo;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
@@ -10,14 +11,16 @@ import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
 import com.xxl.job.admin.service.AdminBizExt;
+import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -34,6 +37,9 @@ public class AdminBizExtImpl implements AdminBizExt {
   private XxlJobInfoDao xxlJobInfoDao;
   @Resource
   private XxlJobGroupDao xxlJobGroupDao;
+  @Resource
+  private XxlJobService xxlJobService;
+  
 
   @Override
   public ReturnT<String> editJob(XxlJobEditInfo xxlJobEditInfo) {
@@ -45,17 +51,23 @@ public class AdminBizExtImpl implements AdminBizExt {
       assert xxlJobEditInfo.getScheduleConf() != null;
 
       List<XxlJobGroup> xxlJobGroups = xxlJobGroupDao.pageList(0, 10, xxlJobEditInfo.getAppname(), null);
-      for (XxlJobGroup xxlJobGroup : xxlJobGroups) {
-        List<XxlJobInfo> xxlJobInfos = xxlJobInfoDao.getJobsByGroup(xxlJobGroup.getId());
-        if (CollectionUtils.isEmpty(xxlJobInfos)) {
-          Optional<XxlJobInfo> xxlJobInfoOptional = xxlJobInfos.stream()
+      if (!CollectionUtils.isEmpty(xxlJobGroups) && xxlJobGroups.size() == 1) {
+        List<XxlJobInfo> xxlJobInfos = xxlJobInfoDao.getJobsByGroup(xxlJobGroups.get(0).getId());
+        if (!CollectionUtils.isEmpty(xxlJobInfos)) {
+          List<XxlJobInfo> collect = xxlJobInfos.stream()
               .filter(o -> Objects.equals(o.getExecutorHandler(), xxlJobEditInfo.getExecutorHandler()))
-              .findFirst();
-          exists_jobInfo = xxlJobInfoOptional.orElseThrow(RuntimeException::new);
-          break;
+              .collect(Collectors.toList());
+          if (!CollectionUtils.isEmpty(collect) && collect.size() == 1) {
+            exists_jobInfo = collect.get(0);
+          } else {
+            throw new RuntimeException("job is not find or find over 1");
+          }
+        } else {
+          throw new RuntimeException("job is not find");
         }
+      } else {
+        throw new RuntimeException("group is not find or find over 1");
       }
-      assert exists_jobInfo != null;
     } catch (Exception e) {
       return new ReturnT<>(ReturnT.FAIL_CODE, e.getMessage());
     }
@@ -104,5 +116,27 @@ public class AdminBizExtImpl implements AdminBizExt {
     exists_jobInfo.setTriggerNextTime(nextTriggerTime);
     xxlJobInfoDao.update(exists_jobInfo);
     return ReturnT.SUCCESS;
+  }
+
+  @Override
+  public ReturnT<String> createJob(XxlJobCreatetInfo xxlJobCreatetInfo) {
+    XxlJobInfo xxlJobInfo = new XxlJobInfo();
+    try {
+      assert xxlJobCreatetInfo != null;
+      assert xxlJobCreatetInfo.getAppname() != null;
+
+      BeanUtils.copyProperties(xxlJobCreatetInfo, xxlJobInfo);
+      if (xxlJobCreatetInfo.getJobGroup() == null) {
+        List<XxlJobGroup> xxlJobGroups = xxlJobGroupDao.pageList(0, 10, xxlJobCreatetInfo.getAppname(), null);
+        if (!CollectionUtils.isEmpty(xxlJobGroups) && xxlJobGroups.size() == 1) {
+          xxlJobInfo.setJobGroup(xxlJobGroups.get(0).getId());
+        } else {
+          throw new RuntimeException("group is not find or find over 1");
+        }
+      }
+      return xxlJobService.add(xxlJobInfo);
+    } catch (Exception e) {
+      return new ReturnT<>(ReturnT.FAIL_CODE, e.getMessage());
+    }
   }
 }
