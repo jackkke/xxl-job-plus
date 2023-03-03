@@ -1,9 +1,11 @@
 package com.xxl.job.admin.controller;
 
+import com.google.gson.JsonObject;
 import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.model.XxlJobCreatetInfo;
 import com.xxl.job.admin.core.model.XxlJobEditInfo;
+import com.xxl.job.admin.core.model.XxlJobTriggerInfo;
 import com.xxl.job.admin.service.AdminBizExt;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
@@ -73,6 +75,15 @@ public class JobApiController {
         } else if ("createJob".equals(uri)) {
             XxlJobCreatetInfo xxlJobCreatetInfo = GsonTool.fromJson(data, XxlJobCreatetInfo.class);
             return adminBizExt.createJob(xxlJobCreatetInfo);
+        } else if ("triggerJob".equals(uri)) {
+            XxlJobTriggerInfo xxlJobTriggerInfo = GsonTool.fromJson(data, XxlJobTriggerInfo.class);
+            return adminBizExt.triggerJob(xxlJobTriggerInfo);
+        } else if ("startJob".equals(uri)) {
+            JsonObject jsonObject = GsonTool.fromJson(data, JsonObject.class);
+            return adminBizExt.startJob(jsonObject.get("id").getAsInt());
+        } else if ("stopJob".equals(uri)) {
+            JsonObject jsonObject = GsonTool.fromJson(data, JsonObject.class);
+            return adminBizExt.stopJob(jsonObject.get("id").getAsInt());
         } else {
             return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, uri-mapping("+ uri +") not found.");
         }

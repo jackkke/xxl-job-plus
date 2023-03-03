@@ -5,8 +5,11 @@ import com.xxl.job.admin.core.model.XxlJobCreatetInfo;
 import com.xxl.job.admin.core.model.XxlJobEditInfo;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.model.XxlJobTriggerInfo;
 import com.xxl.job.admin.core.scheduler.ScheduleTypeEnum;
 import com.xxl.job.admin.core.thread.JobScheduleHelper;
+import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
+import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.dao.XxlJobInfoDao;
@@ -138,5 +141,22 @@ public class AdminBizExtImpl implements AdminBizExt {
     } catch (Exception e) {
       return new ReturnT<>(ReturnT.FAIL_CODE, e.getMessage());
     }
+  }
+
+  @Override
+  public ReturnT<String> triggerJob(XxlJobTriggerInfo xxlJobTriggerInfo) {
+    JobTriggerPoolHelper.trigger(xxlJobTriggerInfo.getId(), TriggerTypeEnum.MANUAL, -1, null, xxlJobTriggerInfo.getExecutorParam(),
+        xxlJobTriggerInfo.getAddressList());
+    return ReturnT.SUCCESS;
+  }
+
+  @Override
+  public ReturnT<String> startJob(int id) {
+    return xxlJobService.start(id);
+  }
+
+  @Override
+  public ReturnT<String> stopJob(int id) {
+    return xxlJobService.stop(id);
   }
 }
